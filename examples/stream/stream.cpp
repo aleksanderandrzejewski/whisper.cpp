@@ -239,9 +239,9 @@ int main(int argc, char ** argv) {
 
         if (!use_vad) {
             while (true) {
-                audio.get(params.step_ms, pcmf32_new);
+                audio.get(params.step_ms*2, pcmf32_new);
 
-                if ((int) pcmf32_new.size() > 2*n_samples_step) {
+                if ((int) pcmf32_new.size() >= 2*n_samples_step) {
                     fprintf(stderr, "\n\n%s: WARNING: cannot process audio fast enough, dropping audio ...\n\n", __func__);
                     audio.clear();
                     continue;
@@ -387,7 +387,7 @@ int main(int argc, char ** argv) {
 
             ++n_iter;
 
-            if (!use_vad && (n_iter % n_new_line) == 0) {
+            if (!use_vad && pcmf32.size()>=n_samples_len) {
                 printf("\n");
 
                 // keep part of the audio for next iteration to try to mitigate word boundary issues
